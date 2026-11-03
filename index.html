@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>University CGPA Calculator: Your University’s Own Grading Rules</title>
+<meta name="description" content="CGPA calculator that follows your university rules: grade scale, retake policy, year weights, class bands and percentage formula. Built-in profiles for Nepal, India, Malaysia, UK and more, plus custom rules.">
+<style>
+:root{--bg:#f3f6f4;--card:#fff;--ink:#14231c;--mute:#5d6f66;--line:#d9e2dd;--accent:#0b7a53;--accent-ink:#fff;--warn:#b4491f;--soft:#e6f2ec;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1612;--card:#16211b;--ink:#e8f1ec;--mute:#93a79c;--line:#27372f;--accent:#3ed598;--accent-ink:#06150f;--warn:#ff9a6b;--soft:#1c2c24;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1612;--card:#16211b;--ink:#e8f1ec;--mute:#93a79c;--line:#27372f;--accent:#3ed598;--accent-ink:#06150f;--warn:#ff9a6b;--soft:#1c2c24;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+.wrap{max-width:940px;margin:0 auto;padding:20px 16px 48px}
+header{display:flex;justify-content:space-between;gap:12px;margin-bottom:16px}
+h1{font:700 clamp(1.6rem,4.5vw,2.3rem)/1.15 Georgia,serif;margin:0 0 6px}
+.sub,.note{color:var(--mute)}.sub{margin:0;max-width:62ch}.note{font-size:.88rem}
+button,select,input,textarea{font:inherit;color:inherit}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn.small{padding:5px 10px;font-size:.85rem}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.top{display:grid;grid-template-columns:1fr 1.1fr;gap:16px}
+@media(max-width:720px){.top{grid-template-columns:1fr}}
+.big{font:700 3.4rem/1 Georgia,serif;color:var(--accent)}
+.stats{display:flex;flex-wrap:wrap;gap:18px;margin-top:10px}.stats span{display:block;color:var(--mute);font-size:.85rem}.stats b{font-size:1.15rem}
+label.f{display:block;font-size:.9rem;color:var(--mute);margin-bottom:10px}
+select,input[type=text],input[type=number],textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:4px}
+textarea{font:13px/1.4 ui-monospace,Consolas,monospace;min-height:150px}
+.sem-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.sem-head input[type=text]{width:auto;font-weight:600;background:transparent;border:1px dashed var(--line)}
+.sem-head label{font-size:.85rem;color:var(--mute)}.sem-head input[type=number]{width:70px}
+.row{display:grid;grid-template-columns:1fr 80px 110px 34px;gap:8px;margin-bottom:8px}
+.row.h{color:var(--mute);font-size:.82rem;margin-bottom:4px}.row input,.row select{margin-top:0}
+.row.ig{opacity:.45}.row.fl input,.row.fl select{border-color:var(--warn)}
+.x{background:transparent;border:1px solid var(--line);border-radius:8px;cursor:pointer;color:var(--mute)}
+.pill{background:var(--soft);border-radius:999px;padding:3px 12px;font-weight:600;font-size:.9rem}
+.badge{display:inline-block;background:var(--soft);border-radius:6px;padding:2px 8px;font-size:.8rem;margin-top:4px}
+.plan{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:600px){.plan{grid-template-columns:1fr}.row{grid-template-columns:1fr 64px 96px 34px}}
+.warn{color:var(--warn);font-weight:600}.res b{color:var(--accent)}
+svg text{fill:var(--mute);font:11px sans-serif}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+details summary{cursor:pointer;font-weight:600}
+.nav{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;font-size:.92rem}.nav a,footer a{color:var(--accent);margin-right:12px}footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);color:var(--mute);font-size:.88rem}
+article h2{font:700 1.25rem Georgia,serif;margin:22px 0 8px}article p{max-width:68ch}
+@media print{.noprint{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="nav noprint"><a href="index.html">Calculator</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms</a><a href="disclaimer.html">Disclaimer</a></nav>
+<header>
+<div><h1>University CGPA Calculator</h1>
+<p class="sub">Pick your university rules, add your subjects, and get SGPA, CGPA, percentage and class. Retakes and year weights follow the rules you choose.</p></div>
+<button class="btn ghost small noprint" id="theme">Theme</button>
+</header>
+
+<section class="top">
+<div class="card">
+<div class="note">Overall CGPA</div>
+<div class="big" id="cgpa">0.00</div>
+<div class="stats">
+<div><span>Percentage</span><b id="pct">0%</b></div>
+<div><span>Credits</span><b id="cr">0</b></div>
+<div><span>Class</span><b id="cls">-</b></div>
+<div><span>Failed</span><b id="fl">0</b></div>
+</div>
+<p class="note" id="rt"></p>
+<p class="warn" id="flw"></p>
+</div>
+<div class="card">
+<label class="f">University or grading profile<select id="prof"></select></label>
+<div class="badge" id="pnote"></div>
+<label class="f" style="margin-top:10px">If a subject is repeated (same name)
+<select id="retake"><option value="all">Count every attempt</option><option value="latest">Latest attempt replaces older</option><option value="best">Best attempt only</option></select></label>
+<div class="actions noprint">
+<button class="btn" id="addSem">Add semester or year</button>
+<button class="btn ghost" id="print">Print / PDF</button>
+<button class="btn ghost" id="reset">Clear all</button>
+</div>
+</div>
+</section>
+
+<div id="sems"></div>
+<datalist id="subs"></datalist>
+
+<section class="card"><b>SGPA trend</b><div id="chart" style="overflow-x:auto"></div></section>
+
+<section class="card">
+<b>Target planner</b>
+<p class="note">Uses your current result. Next semester is counted with weight 1.</p>
+<div class="plan">
+<label class="f">Target CGPA<input type="number" id="tg" step="0.01" min="0" placeholder="e.g. 3.5"></label>
+<label class="f">Credits next semester<input type="number" id="nc" min="1" value="20"></label>
+<div class="res" id="planOut">Enter a target.</div>
+</div>
+</section>
+
+<section class="card noprint">
+<details>
+<summary>My university rules: make it exact</summary>
+<p class="note">Copy these from your official handbook. Press Save and use, and the calculator follows them.</p>
+<label class="f">University name<input type="text" id="rn" placeholder="e.g. My College"></label>
+<label class="f">Grades and points, one per line (example A=4). Leave empty if you enter marks in percent.<textarea id="rg" rows="6" placeholder="A=4&#10;B+=3.3&#10;B=3"></textarea></label>
+<label class="f">Highest possible point (4, 10 or 100)<input type="number" id="rm" value="4"></label>
+<label class="f">Pass mark: lowest point that counts as a pass (optional)<input type="number" id="rpm" placeholder="e.g. 40"></label>
+<label class="f">Percentage method<select id="rp"><option value="lin">CGPA ÷ highest × 100</option><option value="x95">CGPA × 9.5</option><option value="vtu">(CGPA − 0.75) × 10</option><option value="raw">Marks are already percent</option></select></label>
+<label class="f">Class bands, one per line, minimum=name (example 70=First)<textarea id="rb" rows="4" placeholder="70=First&#10;60=Second"></textarea></label>
+<label class="f">Class bands use<select id="ro"><option value="p">Percentage</option><option value="g">CGPA</option></select></label>
+<div class="actions"><button class="btn small" id="use">Save and use</button><button class="btn ghost small" id="show">Fill from current profile</button><button class="btn ghost small" id="cp">Copy my data</button><button class="btn ghost small" id="rs">Restore data</button></div>
+<p class="warn" id="err"></p>
+</details>
+</section>
+
+<article>
+<h2>How to use this calculator</h2>
+<p>Choose your grading profile, add each subject with its credits and grade (or marks), and the result updates at once. If your college gives no credits, write 1 for every subject.</p>
+<h2>How it is calculated</h2>
+<p>SGPA = sum of (grade point × credits) ÷ total credits for a semester. CGPA does the same across all semesters, with each semester multiplied by its weight. Repeated subjects follow the retake rule you pick.</p>
+<h2>Frequently asked questions</h2>
+<p><b>What is a credit?</b> A credit shows the weight of a subject. A 4 credit subject counts twice as much as a 2 credit subject.</p>
+<p><b>My university ignores Year 1.</b> Set the weight of Year 1 to 0 and it will not count.</p>
+<p><b>What does 2:2 mean?</b> In the UK, 70% and above is a First, 60 to 69 is a 2:1, 50 to 59 is a 2:2, and 40 to 49 is a Third.</p>
+<p><b>My university is not in the list.</b> Open My university rules, enter the grade points and class bands from your handbook, and press Save and use.</p>
+<p><b>Is my data uploaded?</b> No. It stays in your browser on your device. Use Copy my data to keep a backup.</p>
+<h2>Disclaimer</h2>
+<p>Built-in profiles are common templates, not the official rules of one university. Confirm every rule in your handbook. Your university’s official result is always final.</p>
+<footer class="noprint"><a href="index.html">Calculator</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms</a><a href="disclaimer.html">Disclaimer</a><div>© 2026 Santosh M.</div></footer>
+</article>
+</div>
+
+<script>
+var G4={A:4,"A-":3.7,"B+":3.3,B:3,"B-":2.7,"C+":2.3,C:2,"C-":1.7,"D+":1.3,D:1,F:0};
+var T="Template of common rules. Confirm in your handbook.";
+var PF=[
+{id:"np",c:"Nepal / South Asia",name:"Generic 4.0 (TU, PU, KU style)",max:4,g:G4,pct:"lin",on:"g",b:[[3.6,"Distinction"],[3,"First division"],[2,"Second division"],[0,"Pass or below"]],note:T},
+{id:"bd",c:"Nepal / South Asia",name:"Bangladesh 4.0",max:4,g:{"A+":4,A:3.75,"A-":3.5,"B+":3.25,B:3,"B-":2.75,"C+":2.5,C:2.25,D:2,F:0},pct:"lin",on:"g",b:[],note:T},
+{id:"in",pass:4,c:"India",name:"10 point, CBSE style (CGPA × 9.5)",max:10,g:{O:10,"A+":9,A:8,"B+":7,B:6,C:5,P:4,F:0},pct:"x95",on:"p",b:[[75,"Distinction"],[60,"First class"],[50,"Second class"],[40,"Pass"]],note:T},
+{id:"vtu",pass:4,c:"India",name:"VTU style ((CGPA − 0.75) × 10)",max:10,g:{O:10,"A+":9,A:8,"B+":7,B:6,C:5,P:4,F:0},pct:"vtu",on:"p",b:[[70,"First class with distinction"],[60,"First class"],[50,"Second class"],[40,"Pass"]],note:T},
+{id:"my",c:"Malaysia",name:"Malaysia 4.0",max:4,g:{"A+":4,A:4,"A-":3.67,"B+":3.33,B:3,"B-":2.67,"C+":2.33,C:2,"C-":1.67,"D+":1.33,D:1,F:0},pct:"lin",on:"g",b:[[3.67,"First class"],[3,"Second class upper"],[2,"Second class lower"],[0,"Third class or pass"]],note:T},
+{id:"uk",pass:40,c:"United Kingdom",name:"UK degree (marks %, year weights)",max:100,g:null,pct:"raw",on:"p",b:[[70,"First"],[60,"2:1"],[50,"2:2"],[40,"Third"]],note:"Enter marks. Set the weight per year (many universities use Year 2 : Year 3 as 1 : 2). Check yours."},
+{id:"au",pass:4,c:"Australia",name:"Australia 7 point GPA",max:7,g:{HD:7,D:6,C:5,P:4,F:0},pct:"lin",on:"g",b:[],note:T},
+{id:"us",c:"United States",name:"US 4.0",max:4,g:G4,pct:"lin",on:"g",b:[],note:T}];
+var KEY="cgpa-pro-v1",S={prof:"np",retake:"all",custom:null,sems:[]};
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY));if(d&&d.sems)S=d}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function P(){if(S.prof==="cu"&&S.custom)return S.custom;return PF.filter(function(x){return x.id===S.prof})[0]||PF[0]}
+function esc(s){return String(s).replace(/[&<>"]/g,function(m){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]})}
+function newSem(){var n=S.sems.length+1;return{n:(P().id==="uk"?"Year ":"Semester ")+n,w:1,c:[{n:"",cr:3,g:""},{n:"",cr:3,g:""},{n:"",cr:3,g:""}]}}
+function pt(c){var p=P(),v;if(p.g){v=p.g[c.g]}else{v=c.g===""?undefined:parseFloat(c.g);if(v>p.max||v<0)v=undefined}var cr=parseFloat(c.cr);if(v===undefined||isNaN(v)||!(cr>0))return null;return{p:v,c:cr}}
+function bad(v){var p=P(),m=p.pass;return(m!==undefined&&m!==null)?v<m:(p.g?v<=0:false)}
+function nk(n){var k=String(n||"").toLowerCase().replace(/[^a-z0-9]/g,"");return k.length>3?k.replace(/s$/,""):k}
+function eff(){var E=[],IG={},m={};
+S.sems.forEach(function(s,i){s.c.forEach(function(c,j){var r=pt(c);if(r)E.push({i:i,j:j,k:nk(c.n),p:r.p,c:r.c})})});
+if(S.retake!=="all")E.forEach(function(e,x){if(!e.k)return;var o=m[e.k];if(o===undefined){m[e.k]=x;return}
+if(S.retake==="latest"||e.p>E[o].p){E[o].sk=1;m[e.k]=x}else e.sk=1});
+var R=E.filter(function(e){if(e.sk)IG[e.i+","+e.j]=1;return!e.sk});R.ig=IG;return R}
+function all(){var E=eff(),sem={},A=0,B=0,cr=0;
+E.forEach(function(e){var w=parseFloat(S.sems[e.i].w);if(isNaN(w))w=1;var s=sem[e.i]||(sem[e.i]={a:0,b:0});s.a+=e.p*e.c;s.b+=e.c;A+=w*e.p*e.c;B+=w*e.c;cr+=e.c});
+var fl={};E.forEach(function(e){if(bad(e.p))fl[e.i+","+e.j]=1});
+return{sem:sem,B:B,g:B?A/B:0,cr:cr,ig:E.ig,n:Object.keys(E.ig).length,fl:fl,nf:Object.keys(fl).length}}
+function pc(g){var p=P(),v=p.pct==="x95"?g*9.5:p.pct==="vtu"?(g-.75)*10:p.pct==="raw"?g:g/p.max*100;return Math.max(0,v)}
+function cls(g,p){var q=P();if(!q.b||!q.b.length)return"Not set";var v=q.on==="g"?g:p,b=q.b.slice().sort(function(x,y){return y[0]-x[0]});
+for(var i=0;i<b.length;i++)if(v>=b[i][0])return b[i][1];return"Below pass"}
+function opts(sel){var h='<option value="">Grade</option>';Object.keys(P().g).forEach(function(k){h+='<option'+(k===sel?" selected":"")+'>'+esc(k)+'</option>'});return h}
+function render(){
+var p=P(),D=document,h="";
+var hp="",c0="";PF.forEach(function(x){if(x.c!==c0){if(c0)hp+="</optgroup>";hp+='<optgroup label="'+x.c+'">';c0=x.c}hp+='<option value="'+x.id+'">'+esc(x.name)+'</option>'});
+hp+="</optgroup>"+(S.custom?'<option value="cu">My university: '+esc(S.custom.name||"custom")+'</option>':"");
+D.getElementById("prof").innerHTML=hp;D.getElementById("prof").value=S.prof;D.getElementById("retake").value=S.retake;
+D.getElementById("pnote").textContent=p.note||"Your own rules.";
+S.sems.forEach(function(s,i){
+h+='<section class="card"><div class="sem-head"><input type="text" value="'+esc(s.n)+'" data-i="'+i+'" data-k="sn" aria-label="Name"><label>Weight <input type="number" min="0" step="0.5" value="'+esc(s.w)+'" data-i="'+i+'" data-k="sw"></label><span class="pill"></span><button class="btn ghost small noprint" data-del="'+i+'">Remove</button></div>';
+h+='<div class="row h"><span>Subject</span><span>Credits</span><span>'+(p.g?"Grade":"Marks")+'</span><span></span></div>';
+s.c.forEach(function(c,j){h+='<div class="row" data-r="'+i+','+j+'"><input type="text" placeholder="Subject" list="subs" value="'+esc(c.n)+'" data-i="'+i+'" data-j="'+j+'" data-k="n" aria-label="Subject">'+
+'<input type="number" min="0" step="0.5" value="'+esc(c.cr)+'" data-i="'+i+'" data-j="'+j+'" data-k="cr" aria-label="Credits">'+
+(p.g?'<select data-i="'+i+'" data-j="'+j+'" data-k="g" aria-label="Grade">'+opts(c.g)+'</select>':'<input type="number" min="0" max="'+p.max+'" value="'+esc(c.g)+'" data-i="'+i+'" data-j="'+j+'" data-k="g" aria-label="Marks">')+
+'<button class="x noprint" data-rm="'+i+','+j+'" aria-label="Remove subject">×</button></div>'});
+h+='<button class="btn ghost small noprint" data-add="'+i+'">Add subject</button></section>'});
+if(!S.sems.length)h='<div class="card note">Press Add semester or year to start.</div>';
+D.getElementById("sems").innerHTML=h;var nm={};S.sems.forEach(function(s){s.c.forEach(function(c){if(c.n)nm[c.n]=1})});D.getElementById("subs").innerHTML=Object.keys(nm).map(function(k){return '<option value="'+esc(k)+'">'}).join("");summary()}
+function summary(){
+var D=document,R=all(),p=pc(R.g),pr=P();
+D.getElementById("cgpa").textContent=R.g.toFixed(2);
+D.getElementById("pct").textContent=p.toFixed(1)+"%";
+D.getElementById("cr").textContent=R.cr;
+D.getElementById("cls").textContent=R.B?cls(R.g,p):"-";
+D.getElementById("rt").textContent=R.n?R.n+" earlier attempt(s) not counted (faded rows).":"";D.getElementById("fl").textContent=R.nf;D.getElementById("flw").textContent=R.nf?(R.nf+" subject(s) below the pass mark (red rows). Check your university resit rules."):"";
+var pills=D.querySelectorAll(".pill");
+S.sems.forEach(function(s,i){var x=R.sem[i];if(pills[i])pills[i].textContent="SGPA "+(x?(x.a/x.b).toFixed(2):"-")});
+D.querySelectorAll(".row[data-r]").forEach(function(r){r.classList.toggle("ig",!!R.ig[r.dataset.r]);r.classList.toggle("fl",!!R.fl[r.dataset.r])});
+var W=Math.max(320,S.sems.length*70+40),h='<svg width="'+W+'" height="170" role="img" aria-label="SGPA per semester">';
+S.sems.forEach(function(s,i){var x=R.sem[i],v=x?x.a/x.b:0,bh=v/pr.max*120,px=30+i*70;
+h+='<rect x="'+px+'" y="'+(140-bh)+'" width="40" height="'+bh+'" rx="4" fill="var(--accent)"/><text x="'+(px+20)+'" y="'+(134-bh)+'" text-anchor="middle">'+(x?v.toFixed(2):"")+'</text><text x="'+(px+20)+'" y="158" text-anchor="middle">S'+(i+1)+'</text>'});
+D.getElementById("chart").innerHTML=h+'<line x1="24" y1="140" x2="'+(W-8)+'" y2="140" stroke="var(--line)"/></svg>';
+var t=parseFloat(D.getElementById("tg").value),n=parseFloat(D.getElementById("nc").value),o=D.getElementById("planOut");
+if(isNaN(t)||!(n>0)||!R.B)o.textContent="Enter a target and add some grades.";
+else{var need=(t*(R.B+n)-R.g*R.B)/n;
+if(need>pr.max)o.innerHTML='<span class="warn">Not possible in one semester.</span> You would need '+need.toFixed(2)+' (maximum '+pr.max+'). Plan over more semesters.';
+else if(need<=0)o.innerHTML='You already reach <b>'+t+'</b> even with the lowest result next semester.';
+else o.innerHTML='Score at least <b>'+need.toFixed(2)+'</b> next semester to reach '+t+'.'}
+save()}
+var D=document;
+D.addEventListener("input",function(e){var t=e.target,k=t.dataset.k;if(!k)return;
+if(k==="sn")S.sems[t.dataset.i].n=t.value;else if(k==="sw")S.sems[t.dataset.i].w=t.value;else S.sems[t.dataset.i].c[t.dataset.j][k]=t.value;summary()});
+D.addEventListener("click",function(e){var t=e.target;
+if(t.dataset.del!==undefined){S.sems.splice(t.dataset.del,1);render()}
+else if(t.dataset.add!==undefined){S.sems[t.dataset.add].c.push({n:"",cr:3,g:""});render()}
+else if(t.dataset.rm!==undefined){var a=t.dataset.rm.split(",");S.sems[a[0]].c.splice(a[1],1);render()}});
+D.getElementById("addSem").onclick=function(){S.sems.push(newSem());render()};
+D.getElementById("reset").onclick=function(){if(confirm("Clear all semesters?")){S.sems=[];render()}};
+D.getElementById("print").onclick=function(){window.print()};
+D.getElementById("prof").onchange=function(){S.prof=this.value;S.sems.forEach(function(s){s.c.forEach(function(c){c.g=""})});render()};
+D.getElementById("retake").onchange=function(){S.retake=this.value;summary()};
+D.getElementById("tg").oninput=summary;D.getElementById("nc").oninput=summary;
+function lines(t){return String(t||"").split("\n").map(function(l){return l.trim()}).filter(Boolean)}
+function parseRules(o){var g=null,L=lines(o.g);
+if(L.length){g={};L.forEach(function(l){var i=l.lastIndexOf("=");if(i<1)throw new Error("Grade line needs = like A=4: "+l);var n=parseFloat(l.slice(i+1));if(isNaN(n))throw new Error("Point is not a number: "+l);g[l.slice(0,i).trim()]=n})}
+var mx=parseFloat(o.m);if(!(mx>0))throw new Error("Highest point must be above 0.");
+var b=lines(o.b).map(function(l){var i=l.indexOf("=");var n=parseFloat(l.slice(0,i));if(i<1||isNaN(n))throw new Error("Band line needs 70=First: "+l);return[n,l.slice(i+1).trim()]});
+if(o.p==="raw"&&g)throw new Error("For marks in percent, leave the grade box empty.");
+if(o.p!=="raw"&&!g)throw new Error("Add grades, or choose Marks are already percent.");
+var pm=(o.pm===undefined||o.pm==="")?undefined:parseFloat(o.pm);if(pm!==undefined&&isNaN(pm))throw new Error("Pass mark must be a number.");
+return{id:"cu",c:"Custom",name:o.n||"custom",max:mx,g:g,pct:o.p,on:o.o==="g"?"g":"p",b:b,pass:pm}}
+var F=function(i){return D.getElementById(i)};
+F("show").onclick=function(){var p=P();F("rn").value=p.name||"";F("rg").value=p.g?Object.keys(p.g).map(function(k){return k+"="+p.g[k]}).join("\n"):"";F("rm").value=p.max;F("rp").value=p.pct;F("rb").value=(p.b||[]).map(function(b){return b[0]+"="+b[1]}).join("\n");F("ro").value=p.on;F("rpm").value=p.pass===undefined?"":p.pass};
+F("use").onclick=function(){var er=F("err");er.textContent="";try{S.custom=parseRules({n:F("rn").value,g:F("rg").value,m:F("rm").value,p:F("rp").value,b:F("rb").value,o:F("ro").value,pm:F("rpm").value});S.prof="cu";S.sems.forEach(function(s){s.c.forEach(function(c){c.g=""})});render()}catch(x){er.textContent="Rules error: "+x.message}};
+F("cp").onclick=function(){var t=JSON.stringify(S);try{navigator.clipboard.writeText(t).then(function(){alert("Backup copied. Paste it somewhere safe.")},function(){prompt("Copy this backup:",t)})}catch(e){prompt("Copy this backup:",t)}};
+F("rs").onclick=function(){var t=prompt("Paste your backup here");if(!t)return;try{var d=JSON.parse(t);if(!d||!Array.isArray(d.sems))throw 1;S=Object.assign({prof:"np",retake:"all",custom:null},d);render()}catch(e){alert("This backup text is not valid.")}};
+D.getElementById("theme").onclick=function(){var r=D.documentElement,d=r.getAttribute("data-theme");var dk=d?d==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.setAttribute("data-theme",dk?"light":"dark")};
+load();if(!S.sems.length)S.sems.push(newSem());render();
+</script>
+</body>
+</html>
